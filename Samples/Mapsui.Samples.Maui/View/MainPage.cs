@@ -11,11 +11,16 @@ public sealed class MainPage : ContentPage, IDisposable
     readonly CollectionView collectionView;
     readonly Picker categoryPicker;
     readonly MapControl mapControl = new MapControl();
+
+    readonly Button hideMenuBtn = new Button() { Text = "Show/Hide menu", HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Start, TextColor = Colors.Black };
+    private Grid _mainGrid;
     const int menuItemWidth = 220;
 
     public MainPage(MainViewModel mainViewModel)
     {
-        mapControl.Map.Navigator.RotationLock = false;
+        mapControl.Map.Navigator.RotationLock = true;
+
+        hideMenuBtn.Clicked += HideMenuBtn_Clicked;
 
         categoryPicker = CreatePicker(mainViewModel);
         collectionView = CreateCollectionView(mainViewModel);
@@ -30,7 +35,7 @@ public sealed class MainPage : ContentPage, IDisposable
         // Perhaps it is possible to let the sample itself do this so we do not have to do this for each platform.
         mapControl.Renderer.WidgetRenders[typeof(CustomWidget)] = new CustomWidgetSkiaRenderer();
 
-        Content = new Grid
+        _mainGrid = new Grid
         {
             ColumnDefinitions =
             {
@@ -48,14 +53,25 @@ public sealed class MainPage : ContentPage, IDisposable
                         Spacing = 20,
                         Children =
                         {
+                            new Label { Text = "Mapsui sample for Unit Solutions", FontAttributes = FontAttributes.Bold},
                             categoryPicker,
                             collectionView
                         }
                     }
                 }.Column(0).Padding(10),
-                mapControl.Column(1)
+                mapControl.Column(1).Row(0),
+                hideMenuBtn.Column(1).Row(0)
             }
         };
+
+        Content = _mainGrid;
+    }
+
+    private bool _hideMenu = true;
+    private void HideMenuBtn_Clicked(object? sender, EventArgs e)
+    {
+        _mainGrid.ColumnDefinitions[0].Width = _hideMenu ? 0 : GridLength.Auto;
+        _hideMenu = !_hideMenu;
     }
 
     private static Picker CreatePicker(MainViewModel mainViewModel)
