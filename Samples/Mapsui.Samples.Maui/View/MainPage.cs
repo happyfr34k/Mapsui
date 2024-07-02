@@ -14,7 +14,7 @@ public sealed class MainPage : ContentPage, IDisposable
 
     readonly Button hideMenuBtn = new Button() { Text = "Show/Hide menu", HorizontalOptions = LayoutOptions.Center, VerticalOptions = LayoutOptions.Start, TextColor = Colors.Black };
     private Grid _mainGrid;
-    const int menuItemWidth = 220;
+    const int menuItemWidth = 220; 
 
     public MainPage(MainViewModel mainViewModel)
     {
