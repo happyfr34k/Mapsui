@@ -16,7 +16,7 @@
 		<ApplicationTitle>Mapsui.Samples.Maui</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mapsui.samples.maui</ApplicationId>
+		<ApplicationId>com.unitsolutions.map.sample</ApplicationId>
 		<ApplicationIdGuid>EF1AB34F-37E4-4592-9096-B4D4BD846F37</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -29,6 +29,11 @@
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 		<AndroidManifest>Platforms\Android\AndroidManifest.xml</AndroidManifest>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
+	  <CodesignKey>Apple Development: Tom Willemin (V382CXVD74)</CodesignKey>
+	  <CodesignProvision>VS: com.unitsolutions.map.sample Development</CodesignProvision>
 	</PropertyGroup>
 
 	<ItemGroup>

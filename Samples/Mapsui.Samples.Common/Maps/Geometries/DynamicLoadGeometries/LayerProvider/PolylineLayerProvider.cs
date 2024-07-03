@@ -1,21 +1,22 @@
 ﻿using Mapsui.Layers;
-using Mapsui.Nts;
 using Mapsui.Styles;
 using System.Collections.Generic;
 
 namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
 public static class PolylineLayerProvider
 {
-    public static GenericCollectionLayer<List<GeometryFeature>> GetLayer(List<CustomGeometryObject> geometries, bool withLabel = false)
+    public static Layer GetLayer(List<CustomGeometryObject> geometries, bool withLabel = false)
     {
         var labelStyle = StyleGeometryHelper.GetLabelStyle();
         labelStyle.Enabled = withLabel;
 
-        return new GenericCollectionLayer<List<GeometryFeature>>()
+        var dataSource = new DataProvider(geometries.ToFeatures()) { CRS = "EPSG:3857" };
+
+        return new Layer()
         {
             Name = "Polylines",
             IsMapInfoLayer = true, // Allow the layer's features to be selected (comes on the Map.Info event)
-            Features = geometries.ToFeatures(),
+            DataSource = dataSource,
             Style = new StyleCollection
             {
                 Styles =

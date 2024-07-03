@@ -84,7 +84,7 @@ public sealed class RasterizingTileLayerWithThousandsOfPolygonsSample : IMapCont
         Polygon polygon1;
         int factor;
 
-        for (int i = 0; i < 900000; i++)
+        for (int i = 0; i < 4000; i++)
         {
             factor = i - 100 * (int)Math.Round((double)(i / 100));
             polygon1 = new Polygon(

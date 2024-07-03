@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
 using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
 using NetTopologySuite.Geometries;
-using Mapsui.Nts;
 using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+using Mapsui.Tiling.Layers;
 
 namespace Mapsui.Samples.Common.Maps.Geometries;
 public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
@@ -23,9 +23,12 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
 
     private readonly Map _map = new Map();
 
-    private GenericCollectionLayer<List<GeometryFeature>>? _pointLayer;
-    private GenericCollectionLayer<List<GeometryFeature>>? _polylineLayer;
-    private GenericCollectionLayer<List<GeometryFeature>>? _polygonLayer;
+    private Layer? _pointLayer;
+    private RasterizingTileLayer? _pointRasterzingLayer;
+    private Layer? _polylineLayer;
+    private RasterizingTileLayer? _polylineRasterzingLayer;
+    private Layer? _polygonLayer;
+    private RasterizingTileLayer? _polygonRasterzingLayer;
 
     public Task<Map> CreateMapAsync()
     {
@@ -40,14 +43,20 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
         var pointGeometries = _currentGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNamePoint).ToList();
         _pointLayer?.Dispose();
         _pointLayer = PointLayerProvider.GetLayer(pointGeometries, true);
+        _pointRasterzingLayer?.Dispose();
+        _pointRasterzingLayer = new RasterizingTileLayer(_pointLayer);
 
         var polylineGeometries = _currentGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNameMultiLineString).ToList();
         _polylineLayer?.Dispose();
         _polylineLayer = PolylineLayerProvider.GetLayer(polylineGeometries, true);
+        _polylineRasterzingLayer?.Dispose();
+        _polylineRasterzingLayer = new RasterizingTileLayer(_polylineLayer);
 
         var polygonGeometries = _currentGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNamePolygon).ToList();
         _polygonLayer?.Dispose();
         _polygonLayer = PolygonLayerProvider.GetLayer(polygonGeometries, true);
+        _polygonRasterzingLayer?.Dispose();
+        _polygonRasterzingLayer = new RasterizingTileLayer(_polygonLayer);
 
         _map.Layers.Add(_pointLayer);
         _map.Layers.Add(_polylineLayer);
@@ -74,19 +83,19 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
         /*_pointLayer!.Features.RemoveAll(f => oldGeometries.Any(o => o.Id == (Guid)f["id"]!));
         _polylineLayer!.Features.RemoveAll(f => oldGeometries.Any(o => o.Id == (Guid)f["id"]!));
         _polygonLayer!.Features.RemoveAll(f => oldGeometries.Any(o => o.Id == (Guid)f["id"]!));*/
-        _pointLayer!.Features.Clear();
-        _polylineLayer!.Features.Clear();
-        _polygonLayer!.Features.Clear();
+        ((DataProvider)((Layer)_pointRasterzingLayer!.SourceLayer).DataSource!).ClearData();
+        ((DataProvider)((Layer)_polylineRasterzingLayer!.SourceLayer).DataSource!).ClearData();
+        ((DataProvider)((Layer)_polygonRasterzingLayer!.SourceLayer).DataSource!).ClearData();
 
         // Add new geometries
         var pointGeometries = newGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNamePoint).ToList();
-        _pointLayer.Features.AddRange(pointGeometries.ToFeatures());
+        ((DataProvider)((Layer)_pointRasterzingLayer!.SourceLayer).DataSource!).AddRange(pointGeometries.ToFeatures());
 
         var polylineGeometries = newGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNameLineString).ToList();
-        _polylineLayer.Features.AddRange(polylineGeometries.ToFeatures());
+        ((DataProvider)((Layer)_polylineRasterzingLayer!.SourceLayer).DataSource!).AddRange(polylineGeometries.ToFeatures());
 
         var polygonGeometries = newGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNamePolygon).ToList();
-        _polygonLayer.Features.AddRange(polygonGeometries.ToFeatures());
+        ((DataProvider)((Layer)_polygonRasterzingLayer!.SourceLayer).DataSource!).AddRange(polygonGeometries.ToFeatures());
     }
 
     public void Dispose()
@@ -100,6 +109,9 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
         _pointLayer?.Dispose();
         _polylineLayer?.Dispose();
         _polygonLayer?.Dispose();
+        _pointRasterzingLayer?.Dispose();
+        _polylineRasterzingLayer?.Dispose();
+        _polygonRasterzingLayer?.Dispose();
         _map.Dispose();
     }
 }

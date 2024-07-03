@@ -1,5 +1,4 @@
 ﻿using Mapsui.Layers;
-using Mapsui.Nts;
 using Mapsui.Styles;
 using Mapsui.Styles.Thematics;
 using System.Collections.Generic;
@@ -7,16 +6,18 @@ using System.Collections.Generic;
 namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
 public static class PointLayerProvider
 {
-    public static GenericCollectionLayer<List<GeometryFeature>> GetLayer(List<CustomGeometryObject> geometries, bool withLabel = false)
+    public static Layer GetLayer(List<CustomGeometryObject> geometries, bool withLabel = false)
     {
         var labelStyle = StyleGeometryHelper.GetLabelStyle();
         labelStyle.Enabled = withLabel;
 
-        return new GenericCollectionLayer<List<GeometryFeature>>()
+        var datasource = new DataProvider(geometries.ToFeatures()) { CRS = "EPSG:3857" };
+
+        return new Layer()
         {
             Name = "Points",
             IsMapInfoLayer = true, // Allow the layer's features to be selected (comes on the Map.Info event)
-            Features = geometries.ToFeatures(),
+            DataSource = datasource,
             Style = new StyleCollection
             {
                 Styles =
