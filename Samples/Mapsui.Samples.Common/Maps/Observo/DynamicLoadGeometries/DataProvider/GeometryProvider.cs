@@ -5,14 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
-public sealed class DataProvider : IndexedMemoryProvider, IDynamic, IDisposable
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataProvider;
+public sealed class GeometryProvider : IndexedMemoryProvider, IDynamic, IDisposable
 {
     public event EventHandler? DataChanged;
 
     private readonly List<GeometryFeature> _datasource = new List<GeometryFeature>();
 
-    public DataProvider(List<GeometryFeature> features)
+    public GeometryProvider(List<GeometryFeature> features)
     {
         _datasource = features;
     }

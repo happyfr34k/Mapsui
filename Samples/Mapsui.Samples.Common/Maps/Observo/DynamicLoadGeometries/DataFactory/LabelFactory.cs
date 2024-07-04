@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
 
 public class LabelFactory
 {

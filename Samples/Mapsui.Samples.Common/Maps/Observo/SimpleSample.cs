@@ -1,17 +1,17 @@
 ﻿using Mapsui.Layers;
 using Mapsui.Providers;
-using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries;
 using Mapsui.Tiling;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
-using GeometryFactory = Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory.GeometryFactory;
+using GeometryFactory = Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory.GeometryFactory;
 
-namespace Mapsui.Samples.Common.Maps.Geometries;
+namespace Mapsui.Samples.Common.Maps.Observo;
 [RequiresUnreferencedCode("Calls Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory.GeometryFactory.CreateGeometries()")]
 [RequiresDynamicCode("Calls Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory.GeometryFactory.CreateGeometries()")]
 public class SimpleSample : ISample
 {
-    public string Name => "Simple project";
+    public string Name => "Simple";
     public string Category => "Observo";
 
     public Task<Map> CreateMapAsync()

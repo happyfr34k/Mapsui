@@ -1,9 +1,9 @@
 ﻿using Mapsui.Layers;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataProvider;
 using Mapsui.Styles;
-using Mapsui.Styles.Thematics;
 using System.Collections.Generic;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.LayerProvider;
 public static class PointLayerProvider
 {
     public static Layer GetLayer(List<CustomGeometryObject> geometries, bool withLabel = false)
@@ -11,7 +11,7 @@ public static class PointLayerProvider
         var labelStyle = StyleGeometryHelper.GetLabelStyle();
         labelStyle.Enabled = withLabel;
 
-        var datasource = new DataProvider(geometries.ToFeatures()) { CRS = "EPSG:3857" };
+        var datasource = new GeometryProvider(geometries.ToFeatures()) { CRS = "EPSG:3857" };
 
         return new Layer()
         {
@@ -22,27 +22,12 @@ public static class PointLayerProvider
             {
                 Styles =
                 {
-                    GetBitmapStyle(),
+                    StyleGeometryHelper.GetPointStyle(),
                     // Add a margin around the geometry to make it easier to select
                     StyleGeometryHelper.GetPointSelectionMarginStyle(30),
                     labelStyle
                 }
             }
         };
-    }
-
-    private static ThemeStyle GetBitmapStyle()
-    {
-        return new ThemeStyle((f) =>
-        {
-            var imagePath = (string)f["imagePath"]!;
-            return new SymbolStyle
-            {
-                ImageSource = imagePath,
-                SymbolScale = 0.05,
-                Fill = new Brush(Color.White),
-                SymbolOffset = new RelativeOffset(0.0, 0.5),
-            };
-        });
     }
 }

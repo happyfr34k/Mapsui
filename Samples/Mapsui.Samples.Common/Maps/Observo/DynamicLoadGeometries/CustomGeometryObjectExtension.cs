@@ -1,8 +1,9 @@
 ﻿using Mapsui.Nts;
 using Mapsui.Nts.Extensions;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries;
 using System.Collections.Generic;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries;
 public static class CustomGeometryObjectExtension
 {
     public static GeometryFeature ToFeature(this CustomGeometryObject customGeometry)

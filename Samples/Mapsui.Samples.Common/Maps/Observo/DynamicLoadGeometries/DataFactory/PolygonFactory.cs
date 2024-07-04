@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
 
 public class PolygonFactory
 {
@@ -14,7 +14,7 @@ public class PolygonFactory
 
         for (var i = 0; i < numberOfPolygons; i++)
         {
-            int numPoints = random.Next(minPoints, maxPoints + 1);
+            var numPoints = random.Next(minPoints, maxPoints + 1);
 
             double offsetX;
             double offsetY;
@@ -57,9 +57,9 @@ public class PolygonFactory
 
         for (var i = 0; i < numPoints; i++)
         {
-            double angle = 2 * Math.PI * i / numPoints;
-            double lon = centerX + radiusX * Math.Cos(angle) + random.NextDouble() * 0.05 - 0.025; // Adding slight randomness
-            double lat = centerY + radiusY * Math.Sin(angle) + random.NextDouble() * 0.05 - 0.025; // Adding slight randomness
+            var angle = 2 * Math.PI * i / numPoints;
+            var lon = centerX + radiusX * Math.Cos(angle) + random.NextDouble() * 0.05 - 0.025; // Adding slight randomness
+            var lat = centerY + radiusY * Math.Sin(angle) + random.NextDouble() * 0.05 - 0.025; // Adding slight randomness
             coordinates[i] = new Coordinate(lon, lat);
         }
         coordinates[numPoints] = coordinates[0]; // Close the ring

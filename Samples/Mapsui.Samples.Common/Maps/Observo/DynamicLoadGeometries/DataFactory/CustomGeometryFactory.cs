@@ -4,7 +4,7 @@ using System.Linq;
 using DotSpatial.Projections;
 using NetTopologySuite.Geometries;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
 public static class CustomGeometryFactory
 {
     public static List<CustomGeometryObject> GenerateRandomObjects(int nbObjects, MRect? extent = null)
@@ -45,14 +45,14 @@ public static class CustomGeometryFactory
 
     public static string ConvertWkt(string wkt, Epsg sourceEpsg, Epsg targetEpsg)
     {
-        var rdr = new NetTopologySuite.IO.WKTReader();
-        var wrt = new NetTopologySuite.IO.WKTWriter();
+        var rdr = new WKTReader();
+        var wrt = new WKTWriter();
         var coords = new List<Coordinate>();
         var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory((int)targetEpsg);
         var geometry = rdr.Read(wkt);
 
-        ProjectionInfo epsgWM = KnownCoordinateSystems.Geographic.World.WGS1984;
-        ProjectionInfo epsg4326 = KnownCoordinateSystems.Projected.World.WebMercator;
+        var epsgWM = KnownCoordinateSystems.Geographic.World.WGS1984;
+        var epsg4326 = KnownCoordinateSystems.Projected.World.WebMercator;
 
         double[] xy;
 

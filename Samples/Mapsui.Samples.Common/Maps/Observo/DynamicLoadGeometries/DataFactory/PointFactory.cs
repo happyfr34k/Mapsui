@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Point = NetTopologySuite.Geometries.Point;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
 
 public static class PointFactory
 {

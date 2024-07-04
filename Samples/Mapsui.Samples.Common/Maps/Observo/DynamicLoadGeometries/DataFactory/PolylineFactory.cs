@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
 
 public static class PolylineFactory
 {

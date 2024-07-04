@@ -1,7 +1,7 @@
 ﻿using NetTopologySuite.Geometries;
 using System;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries;
 public class CustomGeometryObject
 {
     public Guid Id { get; set; } = Guid.NewGuid();

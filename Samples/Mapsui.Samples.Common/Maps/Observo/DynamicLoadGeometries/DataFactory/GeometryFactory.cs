@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
 public static class GeometryFactory
 {
     [RequiresUnreferencedCode("test")]
-    [RequiresDynamicCodeAttribute("test")]
+    [RequiresDynamicCode("test")]
     public static List<CustomGeometryObject> CreateGeometries()
     {
 

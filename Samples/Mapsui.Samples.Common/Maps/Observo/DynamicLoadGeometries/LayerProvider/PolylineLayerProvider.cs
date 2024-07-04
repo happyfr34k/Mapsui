@@ -1,8 +1,9 @@
 ﻿using Mapsui.Layers;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataProvider;
 using Mapsui.Styles;
 using System.Collections.Generic;
 
-namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
+namespace Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.LayerProvider;
 public static class PolylineLayerProvider
 {
     public static Layer GetLayer(List<CustomGeometryObject> geometries, bool withLabel = false)
@@ -10,7 +11,7 @@ public static class PolylineLayerProvider
         var labelStyle = StyleGeometryHelper.GetLabelStyle();
         labelStyle.Enabled = withLabel;
 
-        var dataSource = new DataProvider(geometries.ToFeatures()) { CRS = "EPSG:3857" };
+        var dataSource = new GeometryProvider(geometries.ToFeatures()) { CRS = "EPSG:3857" };
 
         return new Layer()
         {
@@ -21,7 +22,7 @@ public static class PolylineLayerProvider
             {
                 Styles =
                 {
-                    GetPolylineStyle(),
+                    StyleGeometryHelper.GetPolylineStyle(),
                     // Add a margin around the geometry to make it easier to select
                     StyleGeometryHelper.GetPolylineSelectionMarginStyle(30),
                     labelStyle
@@ -29,15 +30,4 @@ public static class PolylineLayerProvider
             }
         };
     }
-
-    private static VectorStyle GetPolylineStyle() => new VectorStyle
-    {
-        Line = new Pen
-        {
-            Color = Color.Orange,
-            Width = 2,
-            PenStyle = PenStyle.Solid,
-            PenStrokeCap = PenStrokeCap.Round,
-        }
-    };
 }

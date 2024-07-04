@@ -5,15 +5,16 @@ using Mapsui.Tiling;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
-using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
 using NetTopologySuite.Geometries;
-using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
 using Mapsui.Tiling.Layers;
-using GeometryFactory = Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory.GeometryFactory;
+using GeometryFactory = Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory.GeometryFactory;
 using System.Diagnostics.CodeAnalysis;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataFactory;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.DataProvider;
+using Mapsui.Samples.Common.Maps.Observo.DynamicLoadGeometries.LayerProvider;
 
-namespace Mapsui.Samples.Common.Maps.Geometries;
+namespace Mapsui.Samples.Common.Maps.Observo;
 [RequiresUnreferencedCode("")]
 [RequiresDynamicCode("")]
 public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
@@ -88,19 +89,19 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
         /*_pointLayer!.Features.RemoveAll(f => oldGeometries.Any(o => o.Id == (Guid)f["id"]!));
         _polylineLayer!.Features.RemoveAll(f => oldGeometries.Any(o => o.Id == (Guid)f["id"]!));
         _polygonLayer!.Features.RemoveAll(f => oldGeometries.Any(o => o.Id == (Guid)f["id"]!));*/
-        ((DataProvider)((Layer)_pointRasterzingLayer!.SourceLayer).DataSource!).ClearData();
-        ((DataProvider)((Layer)_polylineRasterzingLayer!.SourceLayer).DataSource!).ClearData();
-        ((DataProvider)((Layer)_polygonRasterzingLayer!.SourceLayer).DataSource!).ClearData();
+        ((GeometryProvider)((Layer)_pointRasterzingLayer!.SourceLayer).DataSource!).ClearData();
+        ((GeometryProvider)((Layer)_polylineRasterzingLayer!.SourceLayer).DataSource!).ClearData();
+        ((GeometryProvider)((Layer)_polygonRasterzingLayer!.SourceLayer).DataSource!).ClearData();
 
         // Add new geometries
         var pointGeometries = newGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNamePoint).ToList();
-        ((DataProvider)((Layer)_pointRasterzingLayer!.SourceLayer).DataSource!).AddRange(pointGeometries.ToFeatures());
+        ((GeometryProvider)((Layer)_pointRasterzingLayer!.SourceLayer).DataSource!).AddRange(pointGeometries.ToFeatures());
 
         var polylineGeometries = newGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNameLineString).ToList();
-        ((DataProvider)((Layer)_polylineRasterzingLayer!.SourceLayer).DataSource!).AddRange(polylineGeometries.ToFeatures());
+        ((GeometryProvider)((Layer)_polylineRasterzingLayer!.SourceLayer).DataSource!).AddRange(polylineGeometries.ToFeatures());
 
         var polygonGeometries = newGeometries.Where(g => g.Geometry.GeometryType == Geometry.TypeNamePolygon).ToList();
-        ((DataProvider)((Layer)_polygonRasterzingLayer!.SourceLayer).DataSource!).AddRange(polygonGeometries.ToFeatures());
+        ((GeometryProvider)((Layer)_polygonRasterzingLayer!.SourceLayer).DataSource!).AddRange(polygonGeometries.ToFeatures());
     }
 
     public void Dispose()
