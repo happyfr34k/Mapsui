@@ -12,6 +12,13 @@ public static class StyleGeometryHelper
         LabelColumn = labelColumn
     };
 
+    public static VectorStyle GetEditBasicStyle() => new()
+    {
+        Fill = new Brush(Color.Red),
+        Line = new Pen(Color.Red, 3),
+        Outline = new Pen(Color.Red, 3)
+    };
+
     #region Geometries Styles
     public static ThemeStyle GetPointStyle() => new ThemeStyle((f) =>
     {
@@ -20,7 +27,7 @@ public static class StyleGeometryHelper
         return new SymbolStyle
         {
             ImageSource = isSelected ? "embedded://Mapsui.Samples.Common.Images.Pin.svg" : imagePath,
-            SymbolScale = 0.5,
+            SymbolScale = 0.2,
             Fill = new Brush(Color.White),
             SymbolOffset = new RelativeOffset(0.0, 0.5),
         };

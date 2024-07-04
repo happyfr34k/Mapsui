@@ -34,6 +34,11 @@ public sealed class GeometryProvider : IndexedMemoryProvider, IDynamic, IDisposa
         OnDataChanged();
     }
 
+    /*public void UpdateGeometry(GeometryFeature feature)
+    {
+        _dat
+    }*/
+
     void IDynamic.DataHasChanged()
     {
         OnDataChanged();
