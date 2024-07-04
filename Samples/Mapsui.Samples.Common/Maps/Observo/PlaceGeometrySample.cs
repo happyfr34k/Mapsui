@@ -69,6 +69,7 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
         _map.Widgets.Add(CreateSelectPolylineModeButton(_map));
         _map.Widgets.Add(CreateSelectPolygonModeButton(_map));
         _map.Widgets.Add(CreateAddPointButton(_map));
+        _map.Widgets.Add(CreateValidateButton(_map));
 
         var loggingwidget = _map.Widgets.Where(w => w.GetType().Name == "LoggingWidget").FirstOrDefault();
         if (loggingwidget != null)
@@ -103,7 +104,7 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
     private static BoxWidget CreateBoxForEditWidgets() => new BoxWidget
     {
         Width = 130,
-        Height = 370,
+        Height = 170,
         Position = new MPoint(2, 0),
         HorizontalAlignment = HorizontalAlignment.Absolute,
         VerticalAlignment = VerticalAlignment.Absolute,
@@ -121,19 +122,9 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
         BackColor = Color.LightGray,
         Tapped = (_, e) =>
         {
-            _editManager.EditMode = EditMode.AddPoint;
-            _targetLayer = map.Layers.First(f => f.Name == "Pin layer") as WritableLayer;
-
-            var (minX, minY) = _map.Navigator.Viewport.ScreenToWorldXY(0, 0);
-            var (maxX, maxY) = _map.Navigator.Viewport.ScreenToWorldXY(_map.Navigator.Viewport.Width, _map.Navigator.Viewport.Height);
-            var extent = new MRect(minX, minY, maxX, maxY);
-
-            var selectedFeatures = _targetLayer?.GetFeatures(extent, _map.Navigator.Viewport.Resolution).Where(f => (bool?)f["isSelected"] == true) ?? [];
-            if (selectedFeatures.Count() > 0)
-            {
-                // _targetLayer.TryRemove(selectedFeatures.First());
-                _editManager.Layer?.Add(selectedFeatures.First());
-            }
+            if (map.Layers.First(f => f.Name == "Pin layer") is not WritableLayer targetLayer)
+                return false;
+            StartCreation(EditMode.AddPoint, targetLayer);
             return true;
         }
     };
@@ -150,8 +141,9 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
         BackColor = Color.LightGray,
         Tapped = (_, e) =>
         {
-            _editManager.EditMode = EditMode.AddLine;
-            _targetLayer = map.Layers.First(f => f.Name == "Polyline layer") as WritableLayer;
+            if (map.Layers.First(f => f.Name == "Polyline layer") is not WritableLayer targetLayer)
+                return false;
+            StartCreation(EditMode.AddLine, targetLayer);
             return true;
         }
     };
@@ -168,8 +160,9 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
         BackColor = Color.LightGray,
         Tapped = (_, e) =>
         {
-            _editManager.EditMode = EditMode.AddPolygon;
-            _targetLayer = map.Layers.First(f => f.Name == "Polygon layer") as WritableLayer;
+            if (map.Layers.First(f => f.Name == "Polygon layer") is not WritableLayer targetLayer)
+                return false;
+            StartCreation(EditMode.AddPolygon, targetLayer);
             return true;
         }
     };
@@ -186,15 +179,12 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
         BackColor = Color.LightGray,
         Tapped = (_, e) =>
         {
-            if (_editManager.EditMode == EditMode.None) return false;
-
-            // EditManipulation.OnTapped(new ScreenPosition(_map.Navigator.Viewport.Width / 2, _map.Navigator.Viewport.Height / 2), _editManager, _mapControl!, TapType.Single, false);
-            _editManager.AddVertex(_map.Navigator.Viewport.ScreenToWorld(new ScreenPosition(_map.Navigator.Viewport.Width / 2, _map.Navigator.Viewport.Height / 2)).ToCoordinate());
+            AddPoint();
             return true;
         }
     };
 
-    private ButtonWidget CreatValidateButton(Map map) => new()
+    private ButtonWidget CreateValidateButton(Map map) => new()
     {
         Position = new MPoint(5, 130),
         Height = 28,
@@ -206,13 +196,7 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
         BackColor = Color.LightGray,
         Tapped = (_, e) =>
         {
-            if (_editManager.EditMode == EditMode.None) return false;
-            var features = _editManager.Layer?.GetFeatures();
-            if (features == null) return false;
-
-            _targetLayer?.AddRange(features.Copy());
-
-            // _targetLayer = map.Layers.FirstOrDefault(f => f.Name == "Layer 1") as WritableLayer;
+            EndCreation();
             return true;
         }
     };
@@ -286,6 +270,44 @@ public sealed class PlaceGeometrySample : IMapControlSample, IDisposable
 
         layer.AddRange(polygons.ToFeatures());
         return layer;
+    }
+    #endregion
+
+    #region Edition
+    private void AddPoint()
+    {
+        if (_editManager.EditMode == EditMode.None) return;
+        // EditManipulation.OnTapped(new ScreenPosition(_map.Navigator.Viewport.Width / 2, _map.Navigator.Viewport.Height / 2), _editManager, _mapControl!, TapType.Single, false);
+        _editManager.AddVertex(_map.Navigator.Viewport.ScreenToWorld(new ScreenPosition(_map.Navigator.Viewport.Width / 2, _map.Navigator.Viewport.Height / 2)).ToCoordinate());
+    }
+
+    private void StartCreation(EditMode editMode, WritableLayer layer)
+    {
+        _editManager.EditMode = editMode;
+        _targetLayer = layer;
+
+        var (minX, minY) = _map.Navigator.Viewport.ScreenToWorldXY(0, 0);
+        var (maxX, maxY) = _map.Navigator.Viewport.ScreenToWorldXY(_map.Navigator.Viewport.Width, _map.Navigator.Viewport.Height);
+        var extent = new MRect(minX, minY, maxX, maxY);
+
+        var selectedFeatures = _targetLayer?.GetFeatures(extent, _map.Navigator.Viewport.Resolution).Where(f => (bool?)f["isSelected"] == true) ?? [];
+        if (selectedFeatures.Count() > 0)
+        {
+            // _targetLayer.TryRemove(selectedFeatures.First());
+            _editManager.Layer?.Add(selectedFeatures.First());
+        }
+    }
+
+    private void EndCreation()
+    {
+        if (_editManager.EditMode == EditMode.None) return;
+        var features = _editManager.Layer?.GetFeatures();
+        if (features != null)
+            _targetLayer?.AddRange(features.Copy());
+
+        _editManager.Layer?.Clear();
+        _targetLayer = null;
+        _editManager.EditMode = EditMode.None;
     }
     #endregion
 

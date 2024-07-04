@@ -22,7 +22,7 @@ public static class StyleGeometryHelper
     #region Geometries Styles
     public static ThemeStyle GetPointStyle() => new ThemeStyle((f) =>
     {
-        var imagePath = (string)f["imagePath"]!;
+        var imagePath = (string?)f["imagePath"] ?? "embedded://Mapsui.Samples.Common.Images.loc.png";
         var isSelected = (bool?)f["isSelected"] ?? false;
         return new SymbolStyle
         {
