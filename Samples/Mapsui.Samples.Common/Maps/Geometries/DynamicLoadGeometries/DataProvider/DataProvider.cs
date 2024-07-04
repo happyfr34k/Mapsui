@@ -1,12 +1,12 @@
 ﻿using Mapsui.Layers;
 using Mapsui.Nts;
-using Mapsui.Providers;
+using Mapsui.Nts.Providers;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries;
-public sealed class DataProvider : MemoryProvider, IDynamic, IDisposable
+public sealed class DataProvider : IndexedMemoryProvider, IDynamic, IDisposable
 {
     public event EventHandler? DataChanged;
 

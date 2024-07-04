@@ -10,8 +10,12 @@ using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.LayerProvider;
 using NetTopologySuite.Geometries;
 using Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory;
 using Mapsui.Tiling.Layers;
+using GeometryFactory = Mapsui.Samples.Common.Maps.Geometries.DynamicLoadGeometries.DataFactory.GeometryFactory;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mapsui.Samples.Common.Maps.Geometries;
+[RequiresUnreferencedCode("")]
+[RequiresDynamicCode("")]
 public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
 {
     private bool _disposed;
@@ -30,13 +34,14 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
     private Layer? _polygonLayer;
     private RasterizingTileLayer? _polygonRasterzingLayer;
 
+
     public Task<Map> CreateMapAsync()
     {
-        _currentGeometries = CustomGeometryFactory.GenerateRandomObjects(250);
+        _currentGeometries = GeometryFactory.CreateGeometries();
 
         // Evenement a chaque déplacement
         // _map.Navigator.ViewportChanged += Navigator_ViewportChanged;
-        _map.Navigator.RefreshDataRequest += Navigator_RefreshDataRequest;
+        // _map.Navigator.RefreshDataRequest += Navigator_RefreshDataRequest;
 
         _map.Layers.Add(OpenStreetMap.CreateTileLayer());
 
@@ -58,9 +63,9 @@ public sealed class DynamicLoadGeometriesSample : ISample, IDisposable
         _polygonRasterzingLayer?.Dispose();
         _polygonRasterzingLayer = new RasterizingTileLayer(_polygonLayer);
 
-        _map.Layers.Add(_pointLayer);
-        _map.Layers.Add(_polylineLayer);
-        _map.Layers.Add(_polygonLayer);
+        _map.Layers.Add(_pointRasterzingLayer);
+        _map.Layers.Add(_polylineRasterzingLayer);
+        _map.Layers.Add(_polygonRasterzingLayer);
 
         return Task.FromResult(_map);
     }

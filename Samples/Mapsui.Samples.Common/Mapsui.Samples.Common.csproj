@@ -151,9 +151,11 @@
     <EmbeddedResource Include="Images\osm-liberty.png" />
     <EmbeddedResource Include="Images\Pin.svg" />
   </ItemGroup>
+	
 
   <ItemGroup>
     <PackageReference Include="BruTile" />
+    <PackageReference Include="DotSpatial.Projections" />
     <PackageReference Include="System.Text.Json" />
     <PackageReference Include="BruTile.MbTiles" />
   </ItemGroup>
